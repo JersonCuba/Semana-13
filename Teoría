@@ -1,0 +1,122 @@
+
+📘 Semana 13 – Transact-SQL
+
+💡 ¿Qué es Transact-SQL?
+
+Transact-SQL (T-SQL) es la extensión de SQL utilizada por SQL Server.
+Permite no solo consultar datos, sino también programar lógica dentro de la base de datos mediante funciones, procedimientos, variables, condicionales y cursores.
+
+
+---
+
+🔹 Funciones (Functions)
+
+Una función es un bloque de código reutilizable que siempre devuelve un valor.
+Se usa para realizar cálculos o procesar datos.
+
+CREATE FUNCTION dbo.CalcularAreaCirculo (@Radio FLOAT)
+RETURNS FLOAT
+AS
+BEGIN
+    RETURN PI() * @Radio * @Radio;
+END;
+
+Uso:
+
+SELECT dbo.CalcularAreaCirculo(5);
+
+✅ Las funciones no modifican datos, solo calculan y devuelven información.
+
+
+---
+
+🔹 Procedimientos Almacenados (Stored Procedures)
+
+Un procedimiento almacenado puede ejecutar varias sentencias SQL, no requiere devolver un valor y puede modificar datos.
+
+CREATE PROCEDURE dbo.InsertarEmpleado
+    @Nombre NVARCHAR(50),
+    @Edad INT,
+    @Departamento NVARCHAR(50)
+AS
+BEGIN
+    INSERT INTO Empleados (Nombre, Edad, Departamento)
+    VALUES (@Nombre, @Edad, @Departamento);
+END;
+
+Uso:
+
+EXEC dbo.InsertarEmpleado 'Juan Pérez', 30, 'Ventas';
+
+✅ Los procedimientos se usan para automatizar tareas.
+
+
+---
+
+🔹 Variables en T-SQL
+
+Permiten almacenar valores temporalmente dentro de un script.
+
+DECLARE @Nombre NVARCHAR(50);
+SET @Nombre = 'Ana Gómez';
+SELECT @Nombre AS Nombre;
+
+✅ Son útiles cuando una consulta necesita valores dinámicos.
+
+
+---
+
+🔹 Condicional IF
+
+Permite ejecutar código según una condición lógica.
+
+DECLARE @Edad INT = 20;
+
+IF @Edad >= 18
+    PRINT 'Es adulto';
+ELSE
+    PRINT 'Es menor de edad';
+
+✅ Sirve para controlar el flujo de ejecución.
+
+
+---
+
+🔹 Cursores (Cursors)
+
+Un cursor permite recorrer fila por fila un conjunto de resultados.
+
+DECLARE @Nombre NVARCHAR(50);
+
+DECLARE empleado_cursor CURSOR FOR
+SELECT Nombre FROM Empleados;
+
+OPEN empleado_cursor;
+FETCH NEXT FROM empleado_cursor INTO @Nombre;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    PRINT @Nombre;
+    FETCH NEXT FROM empleado_cursor INTO @Nombre;
+END;
+
+CLOSE empleado_cursor;
+DEALLOCATE empleado_cursor;
+
+✅ Se usa cuando es necesario procesar registros uno por uno.
+⚠️ Son menos eficientes que trabajar con consultas en bloque.
+
+
+---
+
+🧠 Conclusión
+
+Herramienta	Para qué se usa	Devuelve valor
+
+Función	Cálculos y transformaciones	✅ Sí
+Procedimiento	Automatizar tareas o modificar datos	❌ No
+Variable	Guardar valores durante el script	—
+IF	Tomar decisiones lógicas	—
+Cursor	Recorrer registros uno por uno	— (pero imprime o procesa)
+
+
